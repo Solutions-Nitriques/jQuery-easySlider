@@ -121,7 +121,7 @@
                 h = obj.height(), // total height
                 i = options.items < 1 ? 1 : options.items, // assure a positive number of items (0 is not positive)
                 clickable = false,
-                ts = s - i, // last position
+                ts = options.continuous ? s-1 : s - i, // last position
                 t = 0, // curent position
                 id = obj.data(__ES_KEY);
             
@@ -140,10 +140,10 @@
     			// overrides width
     			w = getWidth(obj, options.itemsMargin);
     			
-    			if (options.continuous) {
+    			/*if (options.continuous) {
     				s-=2;
     				ts-=2;
-    			}
+    			}*/
             	
             	switch (cmd) {
 		    		case 'start':
@@ -196,8 +196,11 @@
 
             if (options.continuous) {
                 $("ul", obj).prepend($("ul li:last-child", obj).clone().css("margin-left", "-" + w + "px"));
-                $("ul", obj).append($("ul li:nth-child(2)", obj).clone());
-                $("ul", obj).css('width', (s + 1) * w);
+                for (c=0; c < i; c+=1) {
+			var selector = "ul li:nth-child(" + (c+2) + ")";
+			$("ul", obj).append($(selector, obj).clone());
+		}
+                $("ul", obj).css('width', (s + i) * w);
             };
 
             if (!options.vertical) $("li", obj).css('float', 'left');
