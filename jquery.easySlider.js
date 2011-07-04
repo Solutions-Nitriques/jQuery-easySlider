@@ -140,10 +140,10 @@
     			// overrides width
     			w = getWidth(obj, options.itemsMargin);
     			
-    			/*if (options.continuous) {
-    				s-=2;
-    				ts-=2;
-    			}*/
+    			if (options.continuous) {
+    				s-= (1 + i);  //Remove added content on continuous
+    				ts-=(1 + i);
+    			}
             	
             	switch (cmd) {
 		    		case 'start':
