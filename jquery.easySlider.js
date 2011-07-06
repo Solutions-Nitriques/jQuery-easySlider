@@ -76,6 +76,7 @@
 	     numeric: false,
 	     numericId: 'controls',
 	     offsetWidth: 0, // added a offset
+	     offsetHeight: 0,
 	     start: 0, // start page
 	     items: 1, // number of items visible
 	     itemsMargin: 0, // margin between elements
@@ -118,6 +119,7 @@
                 s = $("li", obj).length, // nb of items
                 w = getWidth(obj, options.itemsMargin), // total width with margins
                 wo = options.offsetWidth, // quick ref to offset
+                ho = options.offsetHeight,
                 h = obj.height(), // total height
                 i = options.items < 1 ? 1 : options.items, // assure a positive number of items (0 is not positive)
                 clickable = false,
@@ -175,20 +177,21 @@
             };
 
             if (options.vertical) {
-                obj.width(w);
+                obj.width(w + wo);
             } else {
                 obj.width((w * i) + wo);
             }
             if (options.vertical) {
-                obj.height((h * i)); // should add ho
+                obj.height((h * i) + ho); 
             } else {
-                obj.height(h);
+                obj.height(h + ho);
             }
             // assure no overflow
             obj.css("overflow", "hidden");
             
             // assure width and margins
-            $("ul", obj).width((s * w) + wo);
+            $("ul", obj).width(options.vertical ? w + wo : (s * w) + wo)
+            			.height(options.vertical ? (s * h) + ho : h + ho);
             $("ul", obj).css('margin-left', safeDivide(wo, 2)); // center it
             
             // assure width + height of elements
@@ -196,10 +199,12 @@
 
             if (options.continuous) {
                 $("ul", obj).prepend($("ul li:last-child", obj).clone().css("margin-left", "-" + w + "px"));
+                
+                // @todo should add comment here
                 for (c=0; c < i; c+=1) {
-			var selector = "ul li:nth-child(" + (c+2) + ")";
-			$("ul", obj).append($(selector, obj).clone());
-		}
+					var selector = "ul li:nth-child(" + (c+2) + ")";
+					$("ul", obj).append($(selector, obj).clone());
+				}
                 $("ul", obj).css('width', (s + i) * w);
             };
 
