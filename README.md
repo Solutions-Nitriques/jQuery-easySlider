@@ -8,6 +8,7 @@ Version: 1.8
 *	Originally written by Alen Grakalic	
 *	http://cssglobe.com/post/5780/easy-slider-17-numeric-navigation-jquery-slider
 *	Adapted by Solutions Nitriques
+*	http://www.nitriques.com/open-source/
 
 ## Exemple ##
 
@@ -41,6 +42,8 @@ Version: 1.8
 	lastShow: false,
 	vertical: false,
 	speed: 800,
+	speedConstant: false, // if true, will always scroll for the same duration
+	     						// no matters how many slides go by
 	auto: false,
 	pause: 2000,
 	continuous: false,

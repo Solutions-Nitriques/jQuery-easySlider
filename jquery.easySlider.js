@@ -1,9 +1,10 @@
 ﻿/*
-* 	Easy Slider 1.7 - jQuery plugin
-*	written by Alen Grakalic	
+* 	Easy Slider 1.8 - jQuery plugin
+*	Originally written by Alen Grakalic	
 *	http://cssglobe.com/post/4004/easy-slider-15-the-easiest-jquery-plugin-for-sliding
 *
 *	Copyright (c) 2009 Alen Grakalic (http://cssglobe.com)
+*	Copyright (c) 2011 Solutions Nitriques (http://www.nitriques.com/open-source/)
 *	Dual licensed under the MIT (MIT-LICENSE.txt)
 *	and GPL (GPL-LICENSE.txt) licenses.
 *
@@ -12,6 +13,7 @@
 *
 *   Modified by Solutions Nitriques from
 *   http://cssglobe.com/post/5780/easy-slider-17-numeric-navigation-jquery-slider
+*   - added a speedConstant option
 *   - added an offset
 *   - added a start option
 *   - added a margin between items
@@ -70,6 +72,8 @@
 	     lastShow: false,
 	     vertical: false,
 	     speed: 800,
+	     speedConstant: false, // if true, will always scroll for the same duration
+	     						// no matters how many slides go by
 	     auto: false,
 	     pause: 2000,
 	     continuous: false,
@@ -87,6 +91,11 @@
 	     queue: false,
 	     easing: 'linear'
 	 };
+	
+	// make defaults public
+    $.easySlider = {
+    	defaults: defaults
+    };
 	
 	
 	// plugin function
@@ -321,7 +330,7 @@
 
                     // animation
                     var diff = Math.abs(ot - t);
-                    var speed = diff * options.speed;
+                    var speed = options.speedConstant ? options.speed : diff * options.speed;
                     if (!options.vertical) {
                         p = (t * w * -1);
                         $("ul", obj).animate(
