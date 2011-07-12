@@ -164,6 +164,12 @@
 		    			_stop();
 		    			break;
 		    		default:
+		    			
+		    			if (!isNaN(cmd)) {
+		    				animate(parseInt(cmd, 10), false);
+			    			break;
+		    			}
+		    			
 		    			if (console) {
 		    				console.log(__ES_KEY + ': command unknow');
 		    			}
