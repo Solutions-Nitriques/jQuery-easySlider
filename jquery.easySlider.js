@@ -89,7 +89,7 @@
 	     afterInit: null, // listener
 	     nextPrevShow: true,
 	     queue: false,
-	     easing: 'linear'
+	     easing: $.easign.def // use the default easing
 	 };
 	
 	// make defaults public
