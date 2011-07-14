@@ -358,18 +358,18 @@
 
                     if (!options.continuous && options.controlsFade) {
                         if (t == ts) {
-                            $("a", "#" + options.nextId).hide();
-                            $("a", "#" + options.lastId).hide();
+                            $("#" + options.nextId).hide();
+                            $("#" + options.lastId).hide();
                         } else {
-                            $("a", "#" + options.nextId).show();
-                            $("a", "#" + options.lastId).show();
+                            $("#" + options.nextId).show();
+                            $("#" + options.lastId).show();
                         };
                         if (t == 0) {
-                            $("a", "#" + options.prevId).hide();
-                            $("a", "#" + options.firstId).hide();
+                            $("#" + options.prevId).hide();
+                            $("#" + options.firstId).hide();
                         } else {
-                            $("a", "#" + options.prevId).show();
-                            $("a", "#" + options.firstId).show();
+                            $("#" + options.prevId).show();
+                            $("#" + options.firstId).show();
                         };
                     };
 
