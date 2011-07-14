@@ -132,7 +132,7 @@
                 h = obj.height(), // total height
                 i = options.items < 1 ? 1 : options.items, // assure a positive number of items (0 is not positive)
                 clickable = false,
-                ts = options.continuous ? s-1 : s - i, // last position
+                ts = options.continuous ? s-1 : s - i, // last slide index position
                 t = 0, // curent position
                 id = obj.data(__ES_KEY);
             
@@ -147,14 +147,11 @@
     			
     			// overrides current position
     			t = inst[id].t;
+    			s = inst[id].s;
+    			ts = inst[id].ts;
     			
     			// overrides width
     			w = getWidth(obj, options.itemsMargin);
-    			
-    			if (options.continuous) {
-    				s-= (1 + i);  //Remove added content on continuous
-    				ts-=(1 + i);
-    			}
             	
             	switch (cmd) {
 		    		case 'start':
@@ -190,7 +187,9 @@
             inst[id] = {
         		timer: __id,
         		options: options,
-        		t:t
+        		t:t,
+        		s:s,
+        		ts:ts
             };
 
             if (options.vertical) {
@@ -281,10 +280,15 @@
             };
 
             function adjust() {
+            	// maybe not the same context
+            	t = inst[id] ? inst[id].t : t;
+                ts = inst[id] ? inst[id].ts : ts;
+                s = inst[id] ? inst[id].s : s;
+            	
                 if (t > ts) t = 0;
                 if (t < 0) t = ts;
                 
-                // save position
+                // save new position
                 inst[id].t = t;
                 
                 if (!options.vertical) {
@@ -292,10 +296,29 @@
                 } else {
                     $("ul", obj).css("margin-left", (t * h * -1));
                 }
-                clickable = true;
+                
+                if (!options.continuous && options.controlsFade) {
+                    if (t == ts) {
+                        $("#" + options.nextId).hide();
+                        $("#" + options.lastId).hide();
+                    } else {
+                        $("#" + options.nextId).show();
+                        $("#" + options.lastId).show();
+                    };
+                    if (t == 0) {
+                        $("#" + options.prevId).hide();
+                        $("#" + options.firstId).hide();
+                    } else {
+                        $("#" + options.prevId).show();
+                        $("#" + options.firstId).show();
+                    };
+                };
+                
                 if (options.numeric) {
                 	setCurrent(t);
                 }
+
+                clickable = true;
             };
 
             function animate(dir, clicked) {
@@ -305,6 +328,8 @@
                     
                     // get current pos -- do not assume we are in the same context
                     t = inst[id] ? inst[id].t : t;
+                    ts = inst[id] ? inst[id].ts : ts;
+                    s = inst[id] ? inst[id].s : s;
 
                     // save old position
                     var ot = t;
@@ -328,7 +353,7 @@
                             break;
                     };
                     
-                    // save position
+                    // save new position
                     inst[id].t = t;
 
                     // raise before change listner
@@ -354,23 +379,6 @@
 							{ marginTop: p },
 							{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
 						);
-                    };
-
-                    if (!options.continuous && options.controlsFade) {
-                        if (t == ts) {
-                            $("#" + options.nextId).hide();
-                            $("#" + options.lastId).hide();
-                        } else {
-                            $("#" + options.nextId).show();
-                            $("#" + options.lastId).show();
-                        };
-                        if (t == 0) {
-                            $("#" + options.prevId).hide();
-                            $("#" + options.firstId).hide();
-                        } else {
-                            $("#" + options.prevId).show();
-                            $("#" + options.firstId).show();
-                        };
                     };
 
                     if (clicked) { 
@@ -421,8 +429,8 @@
             }
 
             if (!options.continuous && options.controlsFade) {
-                $("a", "#" + options.prevId).hide();
-                $("a", "#" + options.firstId).hide();
+                $("#" + options.prevId).hide();
+                $("#" + options.firstId).hide();
             };
 
             // raise after init listner
