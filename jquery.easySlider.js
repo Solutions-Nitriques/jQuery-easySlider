@@ -166,7 +166,9 @@
 		    		default:
 		    			
 		    			if (!isNaN(cmd)) {
-		    				animate(parseInt(cmd, 10), false);
+		    				// set current scope
+		    				t = parseInt(cmd, 10);
+		    				animate(t, false);
 			    			break;
 		    			}
 		    			
@@ -300,6 +302,9 @@
                 if (clickable || !clicked) {
                     //prevent double click
                     clickable = false;
+                    
+                    // get current pos -- do not assume we are in the same context
+                    t = inst[id] ? inst[id].t : t;
 
                     // save old position
                     var ot = t;
