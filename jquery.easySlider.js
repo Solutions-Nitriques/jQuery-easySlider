@@ -53,9 +53,11 @@
 		// key
 		__ES_KEY = 'easySlider',
 		// instances
-		inst = [],
- 		// default configuration properties
-	 	defaults = {
+		inst = [];
+	
+	// make defaults public
+    $.easySlider = {
+    	defaults: {
 	     prevId: 'prevBtn',
 	     prevText: 'Previous',
 	     nextId: 'nextBtn',
@@ -90,11 +92,7 @@
 	     nextPrevShow: true,
 	     queue: false,
 	     easing: $.easing.def // use the default easing
-	 };
-	
-	// make defaults public
-    $.easySlider = {
-    	defaults: defaults
+	 	}
     };
 	
 	
@@ -105,7 +103,7 @@
         	
         } else {
         	// copy and merge options into default 
-        	options = $.extend({}, defaults, options);
+        	options = $.extend({}, $.easySlider.defaults, options);
         }
 
         function safeDivide(n, d) {
