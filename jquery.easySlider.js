@@ -158,12 +158,21 @@
 		    		case 'stop' :
 		    			_stop();
 		    			break;
+					case 'next' :
+						animate('next',false);
+						break;
+					case 'prev' :
+						animate('prev',false);
+						break;
 		    		default:
 		    			
 		    			if (!isNaN(cmd)) {
-		    				// set current scope
-		    				t = parseInt(cmd, 10);
-		    				animate(t, false);
+		    				// set current scope if different 
+							var newScope = parseInt(cmd, 10);
+							if(t!= newScope) {
+								t = newScope;
+								animate(t, false);
+							}
 			    			break;
 		    			}
 		    			
