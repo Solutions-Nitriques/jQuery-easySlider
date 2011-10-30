@@ -1,4 +1,4 @@
-﻿/*
+/*
 * 	Easy Slider 1.8 - jQuery plugin
 *	Originally written by Alen Grakalic	
 *	http://cssglobe.com/post/4004/easy-slider-15-the-easiest-jquery-plugin-for-sliding
@@ -77,7 +77,7 @@
 	     speedConstant: false, // if true, will always scroll for the same duration
 	     						// no matters how many slides go by
 	     auto: false,
-	     pause: 2000,
+	     pause: 4000,
 	     continuous: false,
 	     numeric: false,
 	     numericId: 'controls',
@@ -409,6 +409,9 @@
             	_stop();
             	
             	if (options.auto && s > 1) {
+            		
+            		console.log('timer started at ' + new Date());
+            		
             		inst[id].timer = setTimeout(function () {
                     	animate("next", false);
                     }, options.pause + delay);
