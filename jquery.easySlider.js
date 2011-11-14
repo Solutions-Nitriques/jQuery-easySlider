@@ -114,7 +114,7 @@
         };
         
         function getWidth(obj, margin) {
-        	return $("li", obj).width() + 2 * margin;
+        	return $(">ul>li", obj).width() + 2 * margin;
         }
      
         if (!this.length) {
@@ -123,7 +123,7 @@
         
         return this.each(function () {
             var obj = $(this),
-                s = $("li", obj).length, // nb of items
+                s = $(">ul>li", obj).length, // nb of items
                 w = getWidth(obj, options.itemsMargin), // total width with margins
                 wo = options.offsetWidth, // quick ref to offset
                 ho = options.offsetHeight,
@@ -204,25 +204,27 @@
             obj.css("overflow", "hidden");
             
             // assure width and margins
-            $("ul", obj).width(options.vertical ? w + wo : (s * w) + wo)
+            $(">ul", obj).width(options.vertical ? w + wo : (s * w) + wo)
             			.height(options.vertical ? (s * h) + ho : h + ho);
-            $("ul", obj).css('margin-left', safeDivide(wo, 2)); // center it
+            $(">ul", obj).css('margin-left', safeDivide(wo, 2)); // center it
             
             // assure width + height of elements
-            $("li", obj).width(w).height(h);
+            $(">ul>li", obj).width(w).height(h);
 
             if (options.continuous) {
-                $("ul", obj).prepend($("ul li:last-child", obj).clone().css("margin-left", "-" + w + "px"));
+                $(">ul", obj).prepend($("ul li:last-child", obj).clone().css("margin-left", "-" + w + "px"));
                 
                 // @todo should add comment here
                 for (c=0; c < i; c+=1) {
 					var selector = "ul li:nth-child(" + (c+2) + ")";
-					$("ul", obj).append($(selector, obj).clone());
+					$(">ul", obj).append($(selector, obj).clone());
 				}
-                $("ul", obj).css('width', (s + i) * w);
+                $(">ul", obj).css('width', (s + i) * w);
             };
 
-            if (!options.vertical) $("li", obj).css('float', 'left');
+            if (!options.vertical) {
+            	$(">ul>li", obj).css('float', 'left');
+            }
 
             if (options.controlsShow) {
                 var html = options.controlsBefore;
@@ -290,9 +292,9 @@
                 inst[id].t = t;
                 
                 if (!options.vertical) {
-                    $("ul", obj).css("margin-left", (t * w * -1) + safeDivide(wo, 2));
+                    $(">ul", obj).css("margin-left", (t * w * -1) + safeDivide(wo, 2));
                 } else {
-                    $("ul", obj).css("margin-left", (t * h * -1));
+                    $(">ul", obj).css("margin-left", (t * h * -1));
                 }
                 
                 if (!options.continuous && options.controlsFade) {
@@ -367,13 +369,13 @@
                     var speed = options.speedConstant ? options.speed : diff * options.speed;
                     if (!options.vertical) {
                         p = (t * w * -1);
-                        $("ul", obj).animate(
+                        $(">ul", obj).animate(
 							{ marginLeft: p + safeDivide(wo, 2) },
 							{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
 						);
                     } else {
                         p = (t * h * -1);
-                        $("ul", obj).animate(
+                        $(">ul", obj).animate(
 							{ marginTop: p },
 							{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
 						);
