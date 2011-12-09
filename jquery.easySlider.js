@@ -1,4 +1,4 @@
-/*
+﻿/*
 * 	Easy Slider 1.8 - jQuery plugin
 *	Originally written by Alen Grakalic	
 *	http://cssglobe.com/post/4004/easy-slider-15-the-easiest-jquery-plugin-for-sliding
@@ -13,6 +13,9 @@
 *
 *   Modified by Solutions Nitriques from
 *   http://cssglobe.com/post/5780/easy-slider-17-numeric-navigation-jquery-slider
+*   - added the autoSizeContainer property
+*   - added the possibility to specify a function as the items number
+*   - added a return value for the beforeChange callback that can cancel the event
 *   - added a speedConstant option
 *   - added an offset
 *   - added a start option
@@ -77,12 +80,13 @@
 	     speedConstant: false, // if true, will always scroll for the same duration
 	     						// no matters how many slides go by
 	     auto: false,
-	     pause: 4000,
+	     pause: 2000,
 	     continuous: false,
 	     numeric: false,
 	     numericId: 'controls',
 	     offsetWidth: 0, // added a offset
 	     offsetHeight: 0,
+	     autoSizeContainer: true,
 	     start: 0, // start page
 	     items: 1, // number of items visible
 	     itemsMargin: 0, // margin between elements
@@ -114,8 +118,19 @@
         };
         
         function getWidth(obj, margin) {
-        	return $(">ul>li", obj).width() + 2 * margin;
-        }
+        	return $("li", obj).width() + 2 * margin;
+        };
+        
+        function getNumberOfItems(options) {
+        	if ($.isFunction(options.items)) {
+        		return options.items();
+        	}
+        	return options.items;
+        };
+        
+        function getLastSlideIndex(totalCount, options) {
+        	return options.continuous ? totalCount - 1 : totalCount - getNumberOfItems(options);
+        };
      
         if (!this.length) {
         	return this;
@@ -123,14 +138,14 @@
         
         return this.each(function () {
             var obj = $(this),
-                s = $(">ul>li", obj).length, // nb of items
+                s = $("li", obj).length, // nb of items
                 w = getWidth(obj, options.itemsMargin), // total width with margins
                 wo = options.offsetWidth, // quick ref to offset
                 ho = options.offsetHeight,
                 h = obj.height(), // total height
-                i = options.items < 1 ? 1 : options.items, // assure a positive number of items (0 is not positive)
+                i = getNumberOfItems(options) < 1 ? 1 : getNumberOfItems(options), // assure a positive number of items (0 is not positive)
                 clickable = false,
-                ts = options.continuous ? s-1 : s - i, // last slide index position
+                //ts = options.continuous ? s-1 : s - i, // last slide index position
                 t = 0, // curent position
                 id = obj.data(__ES_KEY);
             
@@ -146,7 +161,7 @@
     			// overrides current position
     			t = inst[id].t;
     			s = inst[id].s;
-    			ts = inst[id].ts;
+    			//ts = inst[id].ts;
     			
     			// overrides width
     			w = getWidth(obj, options.itemsMargin);
@@ -158,12 +173,21 @@
 		    		case 'stop' :
 		    			_stop();
 		    			break;
+					case 'next' :
+						animate('next',false);
+						break;
+					case 'prev' :
+						animate('prev',false);
+						break;
 		    		default:
 		    			
 		    			if (!isNaN(cmd)) {
-		    				// set current scope
-		    				t = parseInt(cmd, 10);
-		    				animate(t, false);
+		    				// set current scope if different 
+							var newScope = parseInt(cmd, 10);
+							if(t!= newScope) {
+								t = newScope;
+								animate(t, false);
+							}
 			    			break;
 		    			}
 		    			
@@ -186,44 +210,46 @@
         		timer: __id,
         		options: options,
         		t:t,
-        		s:s,
-        		ts:ts
+        		s:s
+        		//ts:ts
             };
 
-            if (options.vertical) {
-                obj.width(w + wo);
-            } else {
-                obj.width((w * i) + wo);
-            }
-            if (options.vertical) {
-                obj.height((h * i) + ho); 
-            } else {
-                obj.height(h + ho);
+            if (options.autoSizeContainer) {
+	            if (options.vertical) {
+	                obj.width(w + wo);
+	            } else {
+	                obj.width((w * i) + wo);
+	            }
+	            if (options.vertical) {
+	                obj.height((h * i) + ho); 
+	            } else {
+	                obj.height(h + ho);
+	            }
             }
             // assure no overflow
             obj.css("overflow", "hidden");
             
             // assure width and margins
-            $(">ul", obj).width(options.vertical ? w + wo : (s * w) + wo)
+            $("ul", obj).width(options.vertical ? w + wo : (s * w) + wo)
             			.height(options.vertical ? (s * h) + ho : h + ho);
-            $(">ul", obj).css('margin-left', safeDivide(wo, 2)); // center it
+            $("ul", obj).css('margin-left', safeDivide(wo, 2)); // center it
             
             // assure width + height of elements
-            $(">ul>li", obj).width(w).height(h);
+            $("li", obj).width(w).height(h);
 
             if (options.continuous) {
-                $(">ul", obj).prepend($("ul li:last-child", obj).clone().css("margin-left", "-" + w + "px"));
+                $("ul", obj).prepend($("ul li:last-child", obj).clone().css("margin-left", "-" + w + "px"));
                 
                 // @todo should add comment here
                 for (c=0; c < i; c+=1) {
 					var selector = "ul li:nth-child(" + (c+2) + ")";
-					$(">ul", obj).append($(selector, obj).clone());
+					$("ul", obj).append($(selector, obj).clone());
 				}
-                $(">ul", obj).css('width', (s + i) * w);
+                $("ul", obj).css('width', (s + i) * w);
             };
 
             if (!options.vertical) {
-            	$(">ul>li", obj).css('float', 'left');
+            	$("li", obj).css('float', 'left');
             }
 
             if (options.controlsShow) {
@@ -282,8 +308,8 @@
             function adjust() {
             	// maybe not the same context
             	t = inst[id] ? inst[id].t : t;
-                ts = inst[id] ? inst[id].ts : ts;
                 s = inst[id] ? inst[id].s : s;
+                ts = getLastSlideIndex(s, options); //inst[id] ? inst[id].ts : ts;
             	
                 if (t > ts) t = 0;
                 if (t < 0) t = ts;
@@ -292,9 +318,9 @@
                 inst[id].t = t;
                 
                 if (!options.vertical) {
-                    $(">ul", obj).css("margin-left", (t * w * -1) + safeDivide(wo, 2));
+                    $("ul", obj).css("margin-left", (t * w * -1) + safeDivide(wo, 2));
                 } else {
-                    $(">ul", obj).css("margin-left", (t * h * -1));
+                    $("ul", obj).css("margin-left", (t * h * -1));
                 }
                 
                 if (!options.continuous && options.controlsFade) {
@@ -328,8 +354,9 @@
                     
                     // get current pos -- do not assume we are in the same context
                     t = inst[id] ? inst[id].t : t;
-                    ts = inst[id] ? inst[id].ts : ts;
                     s = inst[id] ? inst[id].s : s;
+                    options = inst[id] ? inst[id].options : options;
+                    ts = getLastSlideIndex(s, options); //inst[id] ? inst[id].ts : ts;
 
                     // save old position
                     var ot = t;
@@ -352,51 +379,53 @@
                             t = dir;
                             break;
                     };
-                    
-                    // save new position
-                    inst[id].t = t;
-
+					
+					var continueAction = true;
                     // raise before change listner
                     if ($.isFunction(options.beforeChange)) {
-                        options.beforeChange(t, ot, s, obj);
+                        continueAction = options.beforeChange(t, ot, s, obj);
                     }
+					if(continueAction) {
+						// save new position
+						inst[id].t = t;
+						
+						// added for disabling select event before abimation
+						$("li", "#" + options.numericId).removeClass("current");
 
-                    // added for disabling select event before abimation
-                    $("li", "#" + options.numericId).removeClass("current");
+						// animation
+						var diff = Math.abs(ot - t);
+						var speed = options.speedConstant ? options.speed : diff * options.speed;
+						if (!options.vertical) {
+							p = (t * w * -1);
+							$("ul", obj).animate(
+								{ marginLeft: p + safeDivide(wo, 2) },
+								{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
+							);
+						} else {
+							p = (t * h * -1);
+							$("ul", obj).animate(
+								{ marginTop: p },
+								{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
+							);
+						};
 
-                    // animation
-                    var diff = Math.abs(ot - t);
-                    var speed = options.speedConstant ? options.speed : diff * options.speed;
-                    if (!options.vertical) {
-                        p = (t * w * -1);
-                        $(">ul", obj).animate(
-							{ marginLeft: p + safeDivide(wo, 2) },
-							{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
-						);
-                    } else {
-                        p = (t * h * -1);
-                        $(">ul", obj).animate(
-							{ marginTop: p },
-							{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
-						);
-                    };
+						if (clicked) { 
+							// stop on click
+							_stop();
+							
+						} else if (options.auto && dir == "next" && inst[id].timer) {
+							// if we are in auto mode, direction is next
+							// and the timeout if still alive (have not been stopped)
+							
+							// start a new timer with a delay 
+							_start(diff * options.speed);
+						};
 
-                    if (clicked) { 
-                    	// stop on click
-                    	_stop();
-                    	
-                    } else if (options.auto && dir == "next" && inst[id].timer) {
-                    	// if we are in auto mode, direction is next
-                    	// and the timeout if still alive (have not been stopped)
-                    	
-                    	// start a new timer with a delay 
-                        _start(diff * options.speed);
-                    };
-
-                    // raise after change listner
-                    if ($.isFunction(options.afterChange)) {
-                        options.afterChange(t, ot, s, obj);
-                    }
+						// raise after change listner
+						if ($.isFunction(options.afterChange)) {
+							options.afterChange(t, ot, s, obj);
+						}
+					}
 
                 };  // if clickable
 
@@ -411,9 +440,6 @@
             	_stop();
             	
             	if (options.auto && s > 1) {
-            		
-            		console.log('timer started at ' + new Date());
-            		
             		inst[id].timer = setTimeout(function () {
                     	animate("next", false);
                     }, options.pause + delay);
