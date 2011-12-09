@@ -1,5 +1,5 @@
 ﻿/*
-* 	Easy Slider 1.8 - jQuery plugin
+* 	Easy Slider 1.8.2 - jQuery plugin
 *	Originally written by Alen Grakalic	
 *	http://cssglobe.com/post/4004/easy-slider-15-the-easiest-jquery-plugin-for-sliding
 *

@@ -1,4 +1,4 @@
-All source code included in the "Configuration Settings"
+All source code included in this project
 archive is, unless otherwise specified, released under the MIT licence as
 follows:
 
