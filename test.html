@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>easy slider test</title>
+<style type="text/css">
+	#site, #slider, #slider ul li {
+		display:block;
+		width:800px;
+		height: 400px;
+		margin: 0;
+		padding: 0;	
+	}
+	
+	#slider ul {
+		display:block;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	#slider ul li {
+		float:left;	
+		overflow:hidden;
+	}
+</style>
+</head>
+<body>
+	<div id="site">
+		<div id="slider">
+		<ul>
+			<li><img src="http://upload.wikimedia.org/wikipedia/commons/c/c1/04SHANG4963.jpg" width="800" /></li>
+			<li><img src="http://upload.wikimedia.org/wikipedia/en/5/55/MG_0008.jpg" width="800" /></li>
+			<li><img src="http://upload.wikimedia.org/wikipedia/en/6/63/IMG_6969.jpg" width="800" /></li>
+		</ul>
+		</div>
+	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script src="jquery.easySlider.js"></script>
+	<script>
+		(function($) {
+			$(function() {
+				
+				$('#slider').easySlider({
+					auto: true,
+					continuous: true,
+					queue: true,
+					numeric: true	
+				});
+				
+			});
+		})(jQuery);
+	</script>
+</body>
+</html>

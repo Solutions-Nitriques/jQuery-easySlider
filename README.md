@@ -1,6 +1,6 @@
 # jQuery easySlider #
 
-Version: 1.8
+Version: 1.8.2
 
 ## Easily add a slider (carousel) to your web page ##
 
@@ -26,40 +26,41 @@ Version: 1.8
 	
 ### Default settings ###
 
-	prevId: 'prevBtn',
-	prevText: 'Previous',
-	nextId: 'nextBtn',
-	nextText: 'Next',
-	controlsShow: true,
-	controlsBefore: '',
-	controlsAfter: '',
-	controlsFade: true,
-	firstId: 'firstBtn',
-	firstText: 'First',
-	firstShow: false,
-	lastId: 'lastBtn',
-	lastText: 'Last',
-	lastShow: false,
-	vertical: false,
-	speed: 800,
-	speedConstant: false, // if true, will always scroll for the same duration
-	     						// no matters how many slides go by
-	auto: false,
-	pause: 2000,
-	continuous: false,
-	numeric: false,
-	numericId: 'controls',
-	offsetWidth: 0, // added a offset,
-	offsetHeight: 0,
-	start: 0, // start page
-	items: 1, // number of items visible
-	itemsMargin: 0, // margin between elements
-	beforeChange: null, // listener
-	afterChange: null, // listener
-	afterInit: null, // listener
-	nextPrevShow: true,
-	queue: false,
-	easing: 'linear'
+	 prevId: 'prevBtn',
+	 prevText: 'Previous',
+	 nextId: 'nextBtn',
+	 nextText: 'Next',
+	 controlsShow: true,
+	 controlsBefore: '',
+	 controlsAfter: '',
+	 controlsFade: true,
+	 firstId: 'firstBtn',
+	 firstText: 'First',
+	 firstShow: false,
+	 lastId: 'lastBtn',
+	 lastText: 'Last',
+	 lastShow: false,
+	 vertical: false,
+	 speed: 800,
+	 speedConstant: false, // if true, will always scroll for the same duration
+							// no matters how many slides go by
+	 auto: false,
+	 pause: 2000,
+	 continuous: false,
+	 numeric: false,
+	 numericId: 'controls',
+	 offsetWidth: 0, // added a offset
+	 offsetHeight: 0,
+	 autoSizeContainer: true,
+	 start: 0, // start page
+	 items: 1, // number of items visible
+	 itemsMargin: 0, // margin between elements
+	 beforeChange: null, // listener
+	 afterChange: null, // listener
+	 afterInit: null, // listener
+	 nextPrevShow: true,
+	 queue: false,
+	 easing: $.easing.def // use the default easing
 
 
 *Voila !*
