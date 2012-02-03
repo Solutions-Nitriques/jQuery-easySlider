@@ -393,21 +393,23 @@
 						$("li", "#" + options.numericId).removeClass("current");
 
 						// animation
-						var diff = Math.abs(ot - t);
-						var speed = options.speedConstant ? options.speed : diff * options.speed;
+						var diff = Math.abs(ot - t),
+							speed = options.speedConstant ? options.speed : diff * options.speed,
+							animProps = null;
+							
 						if (!options.vertical) {
 							p = (t * w * -1);
-							$("ul", obj).animate(
-								{ marginLeft: p + safeDivide(wo, 2) },
-								{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
-							);
+							animProps = { marginLeft: p + safeDivide(wo, 2) };
 						} else {
 							p = (t * h * -1);
-							$("ul", obj).animate(
-								{ marginTop: p },
+							animProps = { marginTop: p };
+						}
+						
+						$("ul", obj).stop( true, true ) // stopping here takes care of letting the requestAnimationFrame do it's job
+							.animate(
+								animProps,
 								{ queue: options.queue, duration: speed, complete: adjust, easing: options.easing }
 							);
-						};
 
 						if (clicked) { 
 							// stop on click
