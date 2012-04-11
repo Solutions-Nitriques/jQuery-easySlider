@@ -116,6 +116,15 @@
             }
             return 0;
         };
+		
+		function isNaN(v) {
+			if ($.isFunction($.isNaN)) {
+				return $.isNaN(v);
+			} else if ($.isFunction($.isNumeric)) {
+				return $.isNumeric(v);
+			}
+			return window.isNaN(v);
+		};
         
         function getWidth(obj, margin) {
         	return $(">ul>li", obj).width() + 2 * margin;
@@ -435,7 +444,7 @@
 
             
             function _start(delay) {
-            	if ($.isNaN(delay)) {
+            	if (isNaN(delay)) {
             		delay = 0;
             	}
             	
