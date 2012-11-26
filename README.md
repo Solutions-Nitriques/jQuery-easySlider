@@ -1,6 +1,6 @@
 # jQuery easySlider #
 
-Version: 1.8.2
+Version: 1.8.3
 
 ## Easily add a slider (carousel) to your web page ##
 
